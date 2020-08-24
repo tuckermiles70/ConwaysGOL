@@ -18,6 +18,8 @@ int main(int argc, char **argv) {
         return -1;
     }
 
+    // Add a load of error checking
+
     ifstream infile;
     infile.open(argv[1]);
 
@@ -32,28 +34,19 @@ int main(int argc, char **argv) {
     string line;
     int i = 0;
     int j = 0;
+    int k = 0;
+    int l = 0;
     while (getline(infile, line)) {
 
         // Nifty :)
         line.erase(remove(line.begin(), line.end(),' '), line.end());
 
-        cout << line << endl;
-
         for (j = 0; j < line.size(); j++) {
             cout << "pushing back " << line[j] << " onto " << "vector " << i << endl;
             board[i][j] = line[j];
         }
-
-        // cout << endl;
-
-        // board.push_back(line);
-
         i++;
     }
-
-    // cout << board[0].size() << endl;
-
-    // cout << board[0][0] << endl;
 
     // Testing input parsing
     for (i = 0; i < 6; i++) {
@@ -62,6 +55,37 @@ int main(int argc, char **argv) {
         }
         cout << endl;
     }
+
+
+    // Rules
+    // 1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+    // 2. Any live cell with two or three live neighbours lives on to the next generation.
+    // 3. Any live cell with more than three live neighbours dies, as if by overpopulation.
+    // 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction
+
+    // Loop through each cell, determining how many alive neighbor's it has
+
+
+    // initialize to -1 so cell itself doesn't get counted as a living neighbor
+    // when finding num of living neighbors
+    int livingNeighbors = -1;
+    
+
+    // loop through each cell
+    for (i = 0; i < 6; i++) {
+        for (j = 0; j < 6; j++) {
+            
+            // Search for living neighbors
+            for (k = -1; k < 1; k++) {
+                for (l = -1; l < 1; l++) {
+                    livingNeighbors += board[i + k][j + l];
+                }
+            }
+
+        }
+    }
+
+
 
     return 0;
 }
