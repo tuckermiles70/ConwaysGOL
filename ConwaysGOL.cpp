@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+// #include <cstring>
 #include <string>
 #include <algorithm>
 #include <vector>
@@ -24,7 +25,7 @@ int main(int argc, char **argv) {
     infile.open(argv[1]);
 
     // Eventually initialize this depending on size of input board
-    vector<vector<char>> board {  {0, 0, 0, 0, 0, 0}, 
+    vector<vector<int>> board {  {0, 0, 0, 0, 0, 0}, 
                                     {0, 0, 0, 0, 0, 0},
                                     {0, 0, 0, 0, 0, 0},
                                     {0, 0, 0, 0, 0, 0},
@@ -43,7 +44,9 @@ int main(int argc, char **argv) {
 
         for (j = 0; j < line.size(); j++) {
             cout << "pushing back " << line[j] << " onto " << "vector " << i << endl;
-            board[i][j] = line[j];
+            
+            // some ASCII fun
+            board[i][j] = line[j] - '0';
         }
         i++;
     }
@@ -70,17 +73,20 @@ int main(int argc, char **argv) {
     // when finding num of living neighbors
     int livingNeighbors = -1;
     
-
     // loop through each cell
-    for (i = 0; i < 6; i++) {
-        for (j = 0; j < 6; j++) {
-            
+    for (i = 1; i < 6 - 1; i++) {
+        for (j = 1; j < 6 - 1; j++) {
+
+            livingNeighbors = -1;
+
             // Search for living neighbors
-            for (k = -1; k < 1; k++) {
-                for (l = -1; l < 1; l++) {
+            for (k = -1; k <= 1; k++) {
+                for (l = -1; l <= 1; l++) {
                     livingNeighbors += board[i + k][j + l];
                 }
             }
+
+            cout << "cell " << i << " " << j << " has " << livingNeighbors << " living neighbors\n";
 
         }
     }
