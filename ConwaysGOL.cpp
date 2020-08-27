@@ -12,6 +12,11 @@ bool isspace(char c) {
     return false;
 }
 
+// Functionize the finding neighbors part and call it in loop. Use this to create a new board after each procedure call
+void tick(vector<vector<int>>) {
+    //
+}
+
 int main(int argc, char **argv) {
 
     // read in table
