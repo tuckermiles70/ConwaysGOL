@@ -5,6 +5,9 @@
 #include <algorithm>
 #include <vector>
 
+// TODO
+// fix conventions.
+
 using namespace std;
 
 bool isspace(char c) {
@@ -12,9 +15,69 @@ bool isspace(char c) {
     return false;
 }
 
-// Functionize the finding neighbors part and call it in loop. Use this to create a new board after each procedure call
-void tick(vector<vector<int>>) {
-    //
+void printBoard(vector<vector<int>> board) {
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            cout << board[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+// Functionized finding neighbors and call it in loop. Creates a new board after each procedure call, or "tick"
+void tick(vector<vector<int>> board) {
+    // Loop through each cell, determining how many alive neighbor's it has
+    // initialize to -1 so cell itself doesn't get counted as a living neighbor
+    // when finding num of living neighbors
+
+
+    // For when changing to M by N -> https://stackoverflow.com/questions/936687/how-do-i-declare-a-2d-array-in-c-using-new
+    // Also don't forget delete
+    int **newest= new int*[6];
+    for (int i = 0; i < 6; i++) {
+        newest[i] = new int[6];
+    }
+
+    int livingNeighbors = -1;
+    for (int i = 1; i < 6 - 1; i++) {
+        for (int j = 1; j < 6 - 1; j++) {
+
+            // livingNeighbors = -1;
+            livingNeighbors = 0;
+
+
+            // Search for living neighbors
+            for (int k = -1; k <= 1; k++) {
+                for (int l = -1; l <= 1; l++) {
+                    livingNeighbors += board[i + k][j + l];
+                }
+            }
+
+            livingNeighbors -= board[i][j];
+
+            // Cell is lonely and dies 
+            if ((board[i][j] == 1) && (livingNeighbors < 2)) 
+                newest[i][j] = 0; 
+
+            // Cell dies due to over population 
+            else if ((board[i][j] == 1) && (livingNeighbors > 3)) 
+                newest[i][j] = 0; 
+
+            // A new cell is born 
+            else if ((board[i][j] == 0) && (livingNeighbors == 3)) 
+                newest[i][j] = 1; 
+
+            // Remains the same 
+            else
+                newest[i][j] = board[i][j]; 
+
+            // cout << "cell " << i << " " << j << " has " << livingNeighbors << " living neighbors\n";
+        }
+    }
+
+
+    cout << "post tick:\n";
+    printBoard(newest);
 }
 
 int main(int argc, char **argv) {
@@ -48,7 +111,7 @@ int main(int argc, char **argv) {
         line.erase(remove(line.begin(), line.end(),' '), line.end());
 
         for (j = 0; j < line.size(); j++) {
-            cout << "pushing back " << line[j] << " onto " << "vector " << i << endl;
+            // cout << "pushing back " << line[j] << " onto " << "vector " << i << endl;
             
             // some ASCII fun
             board[i][j] = line[j] - '0';
@@ -57,13 +120,7 @@ int main(int argc, char **argv) {
     }
 
     // Testing input parsing
-    for (i = 0; i < 6; i++) {
-        for (j = 0; j < 6; j++) {
-            cout << board[i][j] << " ";
-        }
-        cout << endl;
-    }
-
+    printBoard(board);
 
     // Rules
     // 1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
@@ -71,32 +128,6 @@ int main(int argc, char **argv) {
     // 3. Any live cell with more than three live neighbours dies, as if by overpopulation.
     // 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction
 
-    // Loop through each cell, determining how many alive neighbor's it has
-
-
-    // initialize to -1 so cell itself doesn't get counted as a living neighbor
-    // when finding num of living neighbors
-    int livingNeighbors = -1;
-    
-    // loop through each cell
-    for (i = 1; i < 6 - 1; i++) {
-        for (j = 1; j < 6 - 1; j++) {
-
-            livingNeighbors = -1;
-
-            // Search for living neighbors
-            for (k = -1; k <= 1; k++) {
-                for (l = -1; l <= 1; l++) {
-                    livingNeighbors += board[i + k][j + l];
-                }
-            }
-
-            cout << "cell " << i << " " << j << " has " << livingNeighbors << " living neighbors\n";
-
-        }
-    }
-
-
-
+    tick(board);
     return 0;
 }
