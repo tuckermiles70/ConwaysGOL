@@ -24,6 +24,15 @@ void printBoard(vector<vector<int>> board) {
     }
 }
 
+void printBoard(int** board) {
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            cout << board[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
 // Functionized finding neighbors and call it in loop. Creates a new board after each procedure call, or "tick"
 void tick(vector<vector<int>> board) {
     // Loop through each cell, determining how many alive neighbor's it has
@@ -120,7 +129,7 @@ int main(int argc, char **argv) {
     }
 
     // Testing input parsing
-    printBoard(board);
+    // printBoard(board);
 
     // Rules
     // 1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
