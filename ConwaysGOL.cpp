@@ -33,6 +33,22 @@ void printBoard(int** board) {
     }
 }
 
+// int numNeighbors(vector<vector<int>> board, int i, int j) {
+    
+//     int livingNeighbors = 0;
+    
+//     if (board[i-1][j-1]) livingNeighbors++;
+//     if (board[i][j-1]) livingNeighbors++;
+//     if (board[i+1][j-1]) livingNeighbors++;
+//     if (board[i-1][j]) livingNeighbors++;
+//     if (board[i+1][j]) livingNeighbors++;
+//     if (board[i-1][j+1]) livingNeighbors++;
+//     if (board[i][j+1]) livingNeighbors++;
+//     if (board[i+1][j+1]) livingNeighbors++;
+
+//     return livingNeighbors;
+// }
+
 // Functionized finding neighbors and call it in loop. Creates a new board after each procedure call, or "tick"
 void tick(vector<vector<int>> board) {
     // Loop through each cell, determining how many alive neighbor's it has
@@ -48,21 +64,31 @@ void tick(vector<vector<int>> board) {
     }
 
     int livingNeighbors = -1;
-    for (int i = 1; i < 6 - 1; i++) {
-        for (int j = 1; j < 6 - 1; j++) {
+    for (int i = 1; i < 6; i++) {
+        for (int j = 1; j < 6; j++) {
 
             // livingNeighbors = -1;
             livingNeighbors = 0;
 
-
             // Search for living neighbors
             for (int k = -1; k <= 1; k++) {
                 for (int l = -1; l <= 1; l++) {
+
+                    if( (i+k < 0) ||                     // if row offset less than UPPER boundary
+                        (i+k > board.size()-1) ||        // if row offset more than LOWER boundary
+                        (j+l < 0) ||                     // if column offset less than LEFT boundary
+                        (j+l > board[i].size()-1))       // if column offset more than RIGHT boundary
+                            continue;  
+                    
                     livingNeighbors += board[i + k][j + l];
                 }
             }
 
             livingNeighbors -= board[i][j];
+
+            // livingNeighbors = numNeighbors(board, i, j);
+
+            // make this a switch...
 
             // Cell is lonely and dies 
             if ((board[i][j] == 1) && (livingNeighbors < 2)) 
@@ -136,6 +162,7 @@ int main(int argc, char **argv) {
     // 2. Any live cell with two or three live neighbours lives on to the next generation.
     // 3. Any live cell with more than three live neighbours dies, as if by overpopulation.
     // 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction
+
 
     tick(board);
     return 0;
